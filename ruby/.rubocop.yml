@@ -65,6 +65,3 @@ Metrics/ModuleLength:
 Performance/MethodObjectAsBlock:
   Enabled: false
 
-Performance::TimesMap:
-  Enabled: false
-
