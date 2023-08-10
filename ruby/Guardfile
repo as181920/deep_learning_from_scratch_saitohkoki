@@ -30,8 +30,8 @@ guard :bundler do
   files.each { |file| watch(helper.real_path(file)) }
 end
 
-require "guard/minitest"
 guard :minitest, test_folders: ".", test_file_patterns: "*_test.rb" do
+  require "guard/minitest"
   watch(%r{^(.*/)?(.+)_test\.rb$}) { |m| "./#{m[1]}#{m[2]}_test.rb" }
   watch(%r{^(.*/)?(.+)(?<!_test)\.rb$}) { |m| "./#{m[1]}#{m[2]}_test.rb" }
   watch(%r{^test/test_helper\.rb$}) { "test" }
