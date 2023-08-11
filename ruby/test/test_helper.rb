@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "debug"
 require "minitest/autorun"
 require "minitest/mock"
 require "mocha/minitest"
