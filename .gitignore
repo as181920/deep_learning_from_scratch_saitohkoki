@@ -6,3 +6,7 @@
 /pkg/
 /spec/reports/
 /tmp/
+/python/dataset/__pycache__/
+/python/dataset/*.gz
+/python/dataset/mnist.pkl
+/ruby/dataset/*.gz

@@ -14,6 +14,10 @@ GEM
     debug (1.7.2)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
+    faraday (2.7.4)
+      faraday-net_http (>= 2.0, < 3.1)
+      ruby2_keywords (>= 0.0.4)
+    faraday-net_http (3.0.2)
     ffi (1.15.5)
     formatador (1.1.0)
     gem-ctags (1.0.9)
@@ -115,6 +119,7 @@ DEPENDENCIES
   activesupport
   bundler
   debug
+  faraday
   gem-ctags
   guard
   guard-bundler
