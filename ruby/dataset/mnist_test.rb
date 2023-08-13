@@ -11,4 +11,28 @@ describe Mnist do
       Mnist::FILE_CHECKSUMS["train-images-idx3-ubyte.gz"],
       Digest::MD5.file(File.expand_path("train-images-idx3-ubyte.gz", __dir__)).to_s
   end
+
+  it "should shape 60000_784 for train images" do
+    x_train = Mnist.load_train_images
+
+    assert_equal [60000, 784], x_train.shape
+  end
+
+  it "should shape 60000 for train labels" do
+    t_train = Mnist.load_train_labels
+
+    assert_equal [60000], t_train.shape
+  end
+
+  it "should shape 10000_784 for test images" do
+    x_test = Mnist.load_test_images
+
+    assert_equal [10000, 784], x_test.shape
+  end
+
+  it "should shape 10000 for test labels" do
+    t_test = Mnist.load_test_labels
+
+    assert_equal [10000], t_test.shape
+  end
 end
