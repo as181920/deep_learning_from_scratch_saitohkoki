@@ -1,49 +1,27 @@
 require "active_support/all"
-require "matplotlib/pyplot"
 require "torch-rb"
 
-module NeuralNetwork
-  extend self
+require_relative "activation"
 
-  def step_function_for_num(x)
-    x.positive? ? 1 : 0
+class NeuralNetwork
+  attr_reader :network
+
+  def initialize
+    @network = {}
+    @network["W1"] = Torch.tensor([[0.1, 0.3, 0.5], [0.2, 0.4, 0.6]])
+    @network["b1"] = Torch.tensor([0.1, 0.2, 0.3])
+    @network["W2"] = Torch.tensor([[0.1, 0.4], [0.2, 0.5], [0.3, 0.6]])
+    @network["b2"] = Torch.tensor([0.1, 0.2])
+    @network["W3"] = Torch.tensor([[0.1, 0.3], [0.2, 0.4]])
+    @network["b3"] = Torch.tensor([0.1, 0.2])
   end
 
-  # x: (Tensor)
-  def step_function(x)
-    Torch.heaviside(x, Torch.tensor(0, dtype: x.min.dtype))
+  def forward(x)
+    a1 = x.matmul(network["W1"]) + network["b1"]
+    z1 = Activation.sigmoid(a1)
+    a2 = z1.matmul(network["W2"]) + network["b2"]
+    z2 = Activation.sigmoid(a2)
+    a3 = z2.matmul(network["W3"]) + network["b3"]
+    Activation.identity_function(a3)
   end
-
-  def plot_step_function
-    plot(Torch.arange(-5.0, 5.0, 0.1), function: :step_function)
-  end
-
-  # x: (Tensor)
-  def sigmoid(x)
-    x.sigmoid
-  end
-
-  def plot_sigmoid
-    plot(Torch.arange(-5.0, 5.0, 0.1), function: :sigmoid)
-  end
-
-  # x: (Tensor)
-  def relu(x)
-    x.relu
-  end
-
-  def plot_relu
-    plot(Torch.arange(-5.0, 5.0, 0.1), function: :relu, ylim: [-1, 6])
-  end
-
-  private
-
-    def plot(x, function: :sigmoid, ylim: [-0.1, 1.1])
-      y = public_send(function, x)
-
-      plt = Matplotlib::Pyplot
-      plt.plot(x.to_a, y.to_a)
-      plt.ylim(*ylim) if ylim.present?
-      plt.show
-    end
 end
