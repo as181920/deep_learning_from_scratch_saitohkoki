@@ -54,8 +54,7 @@ Metrics/PerceivedComplexity:
 
 Metrics/BlockLength:
   Exclude:
-    - '**/*.rake'
-    - 'test/**/*_test.rb'
+    - '**/*_test.rb'
 
 Metrics/ModuleLength:
   Exclude:
