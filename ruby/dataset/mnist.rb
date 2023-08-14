@@ -24,18 +24,18 @@ module Mnist
     "train-labels-idx1-ubyte.gz": "d53e105ee54ea40749a09fcbcd1e9432"
   }.with_indifferent_access.freeze
 
-  def load(_flatten: true, _normalize: false)
+  def load(_flatten: true, normalize: false, dtype: :float32)
     ensure_files_loaded
 
-    x_train = load_train_images
+    x_train = load_train_images(dtype:, normalize:)
     t_train = load_train_labels
-    x_test = load_test_images
+    x_test = load_test_images(dtype:, normalize:)
     t_test = load_test_labels
 
     { x_train:, t_train:, x_test:, t_test: }
   end
 
-  def load_train_images(dtype: :int32)
+  def load_train_images(dtype: :int32, normalize: false)
     Zlib::GzipReader.open(File.expand_path(FILE_NAMES[:train_img], __dir__)) do |f|
       magic, n_images = f.read(8).unpack("N2")
       raise "Invalid MNIST image file" if magic != 2051
@@ -45,6 +45,7 @@ module Mnist
         .map { f.read(n_rows * n_cols) }
         .map { |img| img.unpack("C*") }
         .then { |images| Torch.tensor(images, dtype:) }
+        .then { |images| normalize ? (images / 255) : images }
     end
   end
 
@@ -58,7 +59,7 @@ module Mnist
     end
   end
 
-  def load_test_images(dtype: :int32)
+  def load_test_images(dtype: :int32, normalize: false)
     Zlib::GzipReader.open(File.expand_path(FILE_NAMES[:test_img], __dir__)) do |f|
       magic, n_images = f.read(8).unpack("N2")
       raise "Invalid MNIST image file" if magic != 2051
@@ -68,6 +69,7 @@ module Mnist
         .map { f.read(n_rows * n_cols) }
         .map { |img| img.unpack("C*") }
         .then { |images| Torch.tensor(images, dtype:) }
+        .then { |images| normalize ? (images / 255) : images }
     end
   end
 

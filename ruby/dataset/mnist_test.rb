@@ -16,6 +16,10 @@ describe Mnist do
     x_train = Mnist.load_train_images
 
     assert_equal [60000, 784], x_train.shape
+
+    sample = x_train.first
+
+    assert(sample.all? { |num| num.to_f.in?(0..255) })
   end
 
   it "should shape 60000 for train labels" do
@@ -34,5 +38,12 @@ describe Mnist do
     t_test = Mnist.load_test_labels
 
     assert_equal [10000], t_test.shape
+  end
+
+  it "should support normalize on load image" do
+    x_train = Mnist.load_train_images(normalize: true)
+    sample = x_train.first
+
+    assert(sample.all? { |num| num.to_f.in?(0..1) })
   end
 end
