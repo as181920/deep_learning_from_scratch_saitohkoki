@@ -31,4 +31,10 @@ describe Activation do
 
     assert Torch.equal(x, Activation.identity_function(x))
   end
+
+  it "should implemep softmax function" do
+    x = Torch.tensor([1.0, 2.0, 99.123])
+
+    assert Torch.equal(Torch.softmax(x, dim: 0), Activation.softmax(x))
+  end
 end

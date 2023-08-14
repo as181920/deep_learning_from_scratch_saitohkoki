@@ -35,7 +35,7 @@ module Mnist
     { x_train:, t_train:, x_test:, t_test: }
   end
 
-  def load_train_images
+  def load_train_images(dtype: :int32)
     Zlib::GzipReader.open(File.expand_path(FILE_NAMES[:train_img], __dir__)) do |f|
       magic, n_images = f.read(8).unpack("N2")
       raise "Invalid MNIST image file" if magic != 2051
@@ -44,7 +44,7 @@ module Mnist
       n_images.times
         .map { f.read(n_rows * n_cols) }
         .map { |img| img.unpack("C*") }
-        .then { |images| Torch.tensor(images) }
+        .then { |images| Torch.tensor(images, dtype:) }
     end
   end
 
@@ -58,7 +58,7 @@ module Mnist
     end
   end
 
-  def load_test_images
+  def load_test_images(dtype: :int32)
     Zlib::GzipReader.open(File.expand_path(FILE_NAMES[:test_img], __dir__)) do |f|
       magic, n_images = f.read(8).unpack("N2")
       raise "Invalid MNIST image file" if magic != 2051
@@ -67,7 +67,7 @@ module Mnist
       n_images.times
         .map { f.read(n_rows * n_cols) }
         .map { |img| img.unpack("C*") }
-        .then { |images| Torch.tensor(images) }
+        .then { |images| Torch.tensor(images, dtype:) }
     end
   end
 

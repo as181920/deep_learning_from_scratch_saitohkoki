@@ -40,6 +40,10 @@ module Activation
     x
   end
 
+  def softmax(x)
+    x.softmax dim: 0
+  end
+
   private
 
     def plot(x, function: :sigmoid, ylim: [-0.1, 1.1])
