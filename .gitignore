@@ -10,3 +10,4 @@
 /python/dataset/*.gz
 /python/dataset/mnist.pkl
 /ruby/dataset/*.gz
+/ruby/dataset/*.png

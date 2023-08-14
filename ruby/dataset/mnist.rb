@@ -1,6 +1,8 @@
 require "active_support/all"
+require "chunky_png"
 require "digest/md5"
 require "faraday"
+require "rainbow"
 require "torch-rb"
 
 module Mnist
@@ -79,6 +81,22 @@ module Mnist
     end
   end
 
+  def save_train_image(index)
+    save_image(load_train_images[index], image_index: index)
+  end
+
+  def print_train_image(index)
+    print_image(load_train_images[index])
+  end
+
+  def save_test_image(index)
+    save_image(load_test_images[index], image_index: index)
+  end
+
+  def print_test_image(index)
+    print_image(load_test_images[index])
+  end
+
   private
 
     def ensure_files_loaded
@@ -98,6 +116,25 @@ module Mnist
       elsif File.exist?(local_path)
         File.delete(local_path)
         false
+      end
+    end
+
+    def save_image(image_data, image_index: "X")
+      width = height = 28
+      image = ChunkyPNG::Image.new(width, height)
+      image_data.each_with_index do |pixel_value, pixel_index|
+        x = pixel_index % width
+        y = pixel_index / width
+        # 在图像上的对应像素位置设置颜色
+        image[x, y] = ChunkyPNG::Color.grayscale(pixel_value.to_i)
+      end
+      image.save(File.expand_path("train_image_#{image_index}.png", __dir__))
+    end
+
+    def print_image(image_data)
+      image_data.each_with_index do |grayscale, pixel_index|
+        print Rainbow("⬛").color(0, 0, grayscale.to_i)
+        print "\n" if (pixel_index.succ % 28).zero?
       end
     end
 end
