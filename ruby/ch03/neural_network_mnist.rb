@@ -35,4 +35,19 @@ class NeuralNetworkMnist
 
     accuracy_cnt.to_f / labels.count
   end
+
+  def calculate_batch_accuracy
+    images = Mnist.load_test_images(dtype: :float32)
+    labels = Mnist.load_test_labels
+
+    batch_size = 100
+    accuracy_cnt = 0
+    (0...(images.size[0] / batch_size)).each do |index|
+      range = (index * batch_size)...(index.succ * batch_size)
+      x = images[range]
+      accuracy_cnt += Torch.eq(Torch.argmax(predict(x), dim: 1), labels[range]).sum(&:long).to_i
+    end
+
+    accuracy_cnt.to_f / labels.count
+  end
 end
