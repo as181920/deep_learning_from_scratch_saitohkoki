@@ -30,6 +30,11 @@ guard :bundler do
   files.each { |file| watch(helper.real_path(file)) }
 end
 
+guard :rubocop do
+  watch(/.+\.rb$/)
+  watch(%r{(?:.+/)?\.rubocop(?:_todo)?\.yml$}) { |m| File.dirname(m[0]) }
+end
+
 guard :minitest, test_folders: ".", test_file_patterns: "*_test.rb" do
   require "guard/minitest"
   watch(%r{^(.*/)?(.+)_test\.rb$}) { |m| "./#{m[1]}#{m[2]}_test.rb" }

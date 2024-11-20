@@ -14,12 +14,12 @@ describe NeuralNetworkMnist do
   it "should calculate accuracy" do
     nn = NeuralNetworkMnist.new
 
-    assert nn.calculate_accuracy > 0.9
+    assert_operator(nn.calculate_accuracy, :>, 0.9)
   end
 
   it "should calculate batch accuracy" do
     nn = NeuralNetworkMnist.new
 
-    assert nn.calculate_batch_accuracy > 0.9
+    assert_operator(nn.calculate_batch_accuracy, :>, 0.9)
   end
 end

@@ -5,7 +5,7 @@ require "faraday"
 require "rainbow"
 require "torch-rb"
 
-module Mnist
+module Mnist # rubocop:disable Metrics/ModuleLength
   extend self
 
   BASE_URL = "http://yann.lecun.com/exdb/mnist/".freeze
@@ -102,7 +102,7 @@ module Mnist
   private
 
     def ensure_files_loaded
-      FILE_NAMES.each do |_type, file_name|
+      FILE_NAMES.each_value do |file_name|
         local_path = File.expand_path(file_name, __dir__)
         next if check_file_md5(local_path)
 
