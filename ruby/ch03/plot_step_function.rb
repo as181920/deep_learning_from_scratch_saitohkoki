@@ -1,3 +1,3 @@
-require_relative "neural_network"
+require_relative "activation"
 
-NeuralNetwork.plot_step_function
+Activation.plot_step_function

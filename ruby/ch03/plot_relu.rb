@@ -1,3 +1,3 @@
-require_relative "neural_network"
+require_relative "activation"
 
-NeuralNetwork.plot_relu
+Activation.plot_relu
