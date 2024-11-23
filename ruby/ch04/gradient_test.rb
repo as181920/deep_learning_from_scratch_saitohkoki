@@ -25,7 +25,7 @@ describe Gradient do
     assert_operator (expected - calculated), :<, 10**-4
   end
 
-  it "should implement numerical gradient for 2-dimension data" do
+  it "should implement numerical gradient for" do
     expected = Torch.tensor([6.0, 8.0], dtype: :float64)
     calculated = Gradient.numerical_gradient(@func2, Torch.tensor([3.0, 4.0], dtype: :float64))
 
