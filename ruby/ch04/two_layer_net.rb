@@ -29,7 +29,7 @@ class TwoLayerNet
   def accuracy(x, t)
     z = predict(x)
     y = Torch.argmax(z, dim: 1)
-    t = Torch.argmax(t, dim: 1)
+    # t = Torch.argmax(t, dim: 1)
     Torch.eq(y, t).sum / Torch.tensor(x.shape[0], dtype: :float64)
   end
 

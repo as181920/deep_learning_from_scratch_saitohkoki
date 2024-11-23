@@ -1,3 +1,4 @@
+require "matplotlib/pyplot"
 require "torch-rb"
 
 module Utility
@@ -12,9 +13,10 @@ module Utility
     x.softmax(dim:)
   end
 
-  def plot(x, y, ylim: [-0.1, 1.1])
+  def plot(x, y, ylim: [-0.1, 1.1], title: nil)
     plt = Matplotlib::Pyplot
     plt.plot(x.to_a, y.to_a)
+    plt.title(title) if title.present?
     plt.ylim(*ylim) if ylim.present?
     plt.show
   end
