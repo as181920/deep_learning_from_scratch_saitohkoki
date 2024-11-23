@@ -4,6 +4,7 @@ module Gradient
   module_function
 
   STEP_SIZE = Torch.tensor(10.0**-4, dtype: :float64)
+  LEARNING_RATE = Torch.tensor(0.01, dtype: :float64)
 
   # use lambda as function
   def numerical_diff(f, x)
@@ -29,5 +30,16 @@ module Gradient
     end
 
     grad
+  end
+
+  def gradient_descent(f, init_x, lr: LEARNING_RATE, step_num: 100)
+    x = init_x.clone
+
+    (1..step_num).each do
+      grad = numerical_gradient(f, x)
+      x -= grad * lr
+    end
+
+    x
   end
 end
