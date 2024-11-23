@@ -1,4 +1,5 @@
 require "torch-rb"
+require_relative "../common/global"
 require_relative "../common/utility"
 require_relative "loss"
 require_relative "gradient"
@@ -8,10 +9,10 @@ class TwoLayerNet
 
   def initialize(input_size: 784, hidden_size: 100, output_size: 10, weight_init_std: 0.01)
     @params = {}
-    params["W1"] = Torch.randn(input_size, hidden_size, dtype: :float64) * weight_init_std
-    params["b1"] = Torch.zeros(hidden_size)
-    params["W2"] = Torch.randn(hidden_size, output_size, dtype: :float64) * weight_init_std
-    params["b2"] = Torch.zeros(output_size)
+    params["W1"] = Torch.randn(input_size, hidden_size, dtype: :float64).to(Global::DEVICE) * weight_init_std
+    params["b1"] = Torch.zeros(hidden_size).to(Global::DEVICE)
+    params["W2"] = Torch.randn(hidden_size, output_size, dtype: :float64).to(Global::DEVICE) * weight_init_std
+    params["b2"] = Torch.zeros(output_size).to(Global::DEVICE)
   end
 
   def predict(x)

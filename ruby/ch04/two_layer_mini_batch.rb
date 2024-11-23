@@ -1,6 +1,7 @@
 require "matplotlib/pyplot"
 require "torch-rb"
 require_relative "../dataset/mnist"
+require_relative "../common/global"
 require_relative "../common/utility"
 require_relative "two_layer_net"
 
@@ -10,10 +11,10 @@ module TwoLayerMiniBatch
   module_function
 
   def perform # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-    x_train = Mnist.load_train_images(dtype: :float64, normalize: true)
-    t_train = Mnist.load_train_labels
-    x_test = Mnist.load_test_images(dtype: :float64, normalize: true)
-    t_test = Mnist.load_test_labels
+    x_train = Mnist.load_train_images(dtype: :float64, normalize: true).to(Global::DEVICE)
+    t_train = Mnist.load_train_labels.to(Global::DEVICE)
+    x_test = Mnist.load_test_images(dtype: :float64, normalize: true).to(Global::DEVICE)
+    t_test = Mnist.load_test_labels.to(Global::DEVICE)
 
     train_loss_list = []
     train_acc_list = []

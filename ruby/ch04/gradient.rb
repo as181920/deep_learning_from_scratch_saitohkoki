@@ -1,4 +1,5 @@
 require "torch-rb"
+require_relative "../common/global"
 
 module Gradient
   module_function
@@ -14,7 +15,7 @@ module Gradient
   def numerical_gradient(f, x) # rubocop:disable Metrics/MethodLength
     original_ndim = x.ndim
     x = x.reshape(1, -1) if original_ndim == 1
-    grad = Torch.zeros(x.shape)
+    grad = Torch.zeros(x.shape).to(Global::DEVICE)
 
     x.each_with_index do |row, row_index|
       row.each_with_index do |value, col_index|
@@ -51,7 +52,7 @@ module Gradient
   # end
 
   def gradient_descent(f, init_x, lr: LEARNING_RATE, step_num: 100)
-    x = init_x.clone
+    x = init_x.clone.to(Global::DEVICE)
 
     (1..step_num).each do
       grad = numerical_gradient(f, x)
