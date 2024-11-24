@@ -1,6 +1,6 @@
 require "torch-rb"
+require "debug"
 
 module Global
-  # DEVICE = "cpu".freeze
-  DEVICE = Torch::CUDA.available? ? "cuda" : "cpu"
+  DEVICE = Torch::CUDA.available? ? ENV.fetch("DEVICE", "cuda") : "cpu"
 end
