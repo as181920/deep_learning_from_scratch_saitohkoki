@@ -1,3 +1,4 @@
+require "active_support/all"
 require "matplotlib/pyplot"
 require "torch-rb"
 
