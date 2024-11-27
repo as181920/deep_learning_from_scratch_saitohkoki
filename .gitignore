@@ -9,5 +9,6 @@
 /python/dataset/__pycache__/
 /python/dataset/*.gz
 /python/dataset/mnist.pkl
+/python/**/__pycache__/
 /ruby/dataset/*.gz
 /ruby/dataset/*.png

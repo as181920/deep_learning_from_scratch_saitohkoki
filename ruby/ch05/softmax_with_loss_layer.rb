@@ -7,7 +7,7 @@ class SoftmaxWithLossLayer
 
   def forward(x, t)
     @t = t
-    @y = Torch.softmax(x, dim: 0)
+    @y = Torch.softmax(x, dim: 1)
     @loss = Loss.cross_entropy_error(y, t)
 
     loss

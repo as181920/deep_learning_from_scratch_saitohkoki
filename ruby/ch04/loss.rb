@@ -29,6 +29,9 @@ module Loss
       t = t.reshape(1, -1)
     end
 
+    # 监督数据是one-hot-vector的情况下，转换为正确解标签的索引
+    t = Torch.argmax(t, dim: 1) if y.size == t.size
+
     batch_size = y.shape[0]
     -Torch.log(y[Array(0..batch_size.pred), t] + DELTA).sum / batch_size
   end

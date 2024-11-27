@@ -15,8 +15,8 @@ class AffineLayer
   end
 
   def backward(dout)
-    dx = Torch::Linalg.multi_dot(dout, w.transpose(0, 1))
-    @dw = Torch::Linalg.multi_dot(x.transpose(0, 1), dout)
+    dx = Torch::Linalg.multi_dot([dout, w.transpose(0, 1)])
+    @dw = Torch::Linalg.multi_dot([x.transpose(0, 1), dout])
     @db = Torch.sum(dout, 0)
 
     dx

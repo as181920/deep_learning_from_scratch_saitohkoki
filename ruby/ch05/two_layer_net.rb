@@ -3,6 +3,9 @@ require_relative "../common/global"
 require_relative "../common/utility"
 require_relative "../ch04/loss"
 require_relative "../ch04/gradient"
+require_relative "../ch05/relu_layer"
+require_relative "../ch05/affine_layer"
+require_relative "../ch05/softmax_with_loss_layer"
 
 class TwoLayerNet
   attr_reader :params, :layers, :last_layer
@@ -44,8 +47,8 @@ class TwoLayerNet
     loss(x, t)
 
     # backward
-    dout = 1
-    last_layer.backward(dout)
+    dout = Torch.ones([3, 10], dtype: :float64).to(Global::DEVICE)
+    dout = last_layer.backward(dout)
     layers.each_value.reverse_each { |layer| dout = layer.backward(dout) }
 
     # set grads
@@ -69,9 +72,9 @@ class TwoLayerNet
 
     def initial_layers
       @layers = {}
-      layers["Affine1"] = AffineLayer.new(params["W1"], params["b1"])
+      layers["Affine1"] = AffineLayer.new(w: params["W1"], b: params["b1"])
       layers["Relu1"] = ReluLayer.new
-      layers["Affine2"] = AffineLayer.new(params["W2"], params["b2"])
+      layers["Affine2"] = AffineLayer.new(w: params["W2"], b: params["b2"])
 
       @last_layer = SoftmaxWithLossLayer.new
     end
