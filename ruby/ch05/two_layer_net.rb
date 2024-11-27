@@ -47,7 +47,7 @@ class TwoLayerNet
     loss(x, t)
 
     # backward
-    dout = Torch.ones([3, 10], dtype: :float64).to(Global::DEVICE)
+    dout = Torch.ones([x.shape[0], 10], dtype: :float64).to(Global::DEVICE)
     dout = last_layer.backward(dout)
     layers.each_value.reverse_each { |layer| dout = layer.backward(dout) }
 

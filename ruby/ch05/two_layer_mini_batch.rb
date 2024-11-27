@@ -10,16 +10,16 @@ module TwoLayerMiniBatch
 
   def perform # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     x_train = Mnist.load_train_images(dtype: :float64, normalize: true).to(Global::DEVICE)
-    t_train = Mnist.load_train_labels.to(Global::DEVICE)
+    t_train = Mnist.load_train_labels(one_hot_label: true).to(Global::DEVICE)
     x_test = Mnist.load_test_images(dtype: :float64, normalize: true).to(Global::DEVICE)
-    t_test = Mnist.load_test_labels.to(Global::DEVICE)
+    t_test = Mnist.load_test_labels(one_hot_label: true).to(Global::DEVICE)
 
     train_loss_list = []
     train_acc_list = []
     test_acc_list = []
 
     # set train configs
-    iters_num = 10 # 10000
+    iters_num = 10000 # 10000
     train_size = x_train.shape[0]
     batch_size = 100
     learning_rate = 0.1
@@ -34,8 +34,8 @@ module TwoLayerMiniBatch
       t_batch = t_train[batch_mask]
 
       # calculate gradient
-      grad = network.numerical_gradient(x_batch, t_batch)
-      # grad = network.gradient(x_batch, t_batch)
+      # grad = network.numerical_gradient(x_batch, t_batch)
+      grad = network.gradient(x_batch, t_batch)
 
       # update params
       %w[W1 b1 W2 b2].each do |key|
@@ -46,16 +46,17 @@ module TwoLayerMiniBatch
       loss = network.loss(x_batch, t_batch)
       train_loss_list.append(loss)
 
-      # save acc data for each epoch
-      if (index % iter_per_epoch).zero?
-        train_acc = network.accuracy(x_train, t_train)
-        test_acc = network.accuracy(x_test, t_test)
-        train_acc_list.append(train_acc)
-        test_acc_list.append(test_acc)
-        print "\ntrain_acc: #{train_acc}, test_acc: #{test_acc}\n"
-      end
+      print "."
+      $stdout.flush
 
-      print index, "."
+      # save acc data for each epoch
+      next unless (index % iter_per_epoch).zero?
+
+      train_acc = network.accuracy(x_train, t_train)
+      test_acc = network.accuracy(x_test, t_test)
+      train_acc_list.append(train_acc)
+      test_acc_list.append(test_acc)
+      print "\ntrain_acc: #{train_acc}, test_acc: #{test_acc}\n"
       $stdout.flush
     end
     print "done.\n"
@@ -64,10 +65,10 @@ module TwoLayerMiniBatch
     Utility.plot(Array(0..train_loss_list.length.pred), train_loss_list.map(&:to_f), ylim: nil, title: "Train Loss Data")
 
     # draw train acc chart
-    # Utility.plot(Array(0..train_acc_list.length.pred), train_acc_list.map(&:to_f), ylim: nil) # data not enough when iters_num is small
+    Utility.plot(Array(0..train_acc_list.length.pred), train_acc_list.map(&:to_f), ylim: nil) # data not enough when iters_num is small
 
     # draw test acc chart
-    # Utility.plot(Array(0..test_acc_list.length.pred), test_acc_list.map(&:to_f), ylim: nil) # data not enough when iters_num is small
+    Utility.plot(Array(0..test_acc_list.length.pred), test_acc_list.map(&:to_f), ylim: nil) # data not enough when iters_num is small
   end
 end
 
