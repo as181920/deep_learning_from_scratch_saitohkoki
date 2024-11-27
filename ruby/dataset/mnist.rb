@@ -24,13 +24,13 @@ module Mnist # rubocop:disable Metrics/ModuleLength
     "train-labels-idx1-ubyte.gz": "d53e105ee54ea40749a09fcbcd1e9432"
   }.with_indifferent_access.freeze
 
-  def load(_flatten: true, normalize: false, dtype: :float32)
+  def load(_flatten: true, normalize: false, one_hot_label: false, dtype: :float32)
     ensure_files_loaded
 
     x_train = load_train_images(dtype:, normalize:)
-    t_train = load_train_labels
+    t_train = load_train_labels(one_hot_label:)
     x_test = load_test_images(dtype:, normalize:)
-    t_test = load_test_labels
+    t_test = load_test_labels(one_hot_label:)
 
     { x_train:, t_train:, x_test:, t_test: }
   end
@@ -49,13 +49,13 @@ module Mnist # rubocop:disable Metrics/ModuleLength
     end
   end
 
-  def load_train_labels
+  def load_train_labels(one_hot_label: false)
     Zlib::GzipReader.open(File.expand_path(FILE_NAMES[:train_label], __dir__)) do |f|
       magic, n_labels = f.read(8).unpack("N2")
       raise "Invalid MNIST label file" if magic != 2049
 
       labels = f.read(n_labels).unpack("C*")
-      Torch.tensor(labels)
+      Torch.tensor(labels).then { |x| one_hot_label ? convert_one_hot_label(x) : x }
     end
   end
 
@@ -73,13 +73,13 @@ module Mnist # rubocop:disable Metrics/ModuleLength
     end
   end
 
-  def load_test_labels
+  def load_test_labels(one_hot_label: false)
     Zlib::GzipReader.open(File.expand_path(FILE_NAMES[:test_label], __dir__)) do |f|
       magic, n_labels = f.read(8).unpack("N2")
       raise "Invalid MNIST label file" if magic != 2049
 
       labels = f.read(n_labels).unpack("C*")
-      Torch.tensor(labels)
+      Torch.tensor(labels).then { |x| one_hot_label ? convert_one_hot_label(x) : x }
     end
   end
 
@@ -138,5 +138,15 @@ module Mnist # rubocop:disable Metrics/ModuleLength
         print Rainbow("⬛").color(0, 0, grayscale.to_i)
         print "\n" if (pixel_index.succ % 28).zero?
       end
+    end
+
+    def convert_one_hot_label(x)
+      one_hot_x = Torch.zeros([x.length, 10])
+
+      one_hot_x.each_with_index do |row, row_index|
+        row[x[row_index]] = 1
+      end
+
+      one_hot_x
     end
 end
