@@ -4,6 +4,7 @@ require_relative "../common/utility"
 require_relative "../ch04/loss"
 require_relative "../ch04/gradient"
 require_relative "../ch05/relu_layer"
+require_relative "../ch05/sigmoid_layer"
 require_relative "../ch05/affine_layer"
 require_relative "../ch05/softmax_with_loss_layer"
 
@@ -17,10 +18,16 @@ class TwoLayerNet
 
   def predict(x)
     layers.each_value { |layer| x = layer.forward(x) }
-    x
+    Utility.softmax(x, dim: 0)
   end
 
   def loss(x, t)
+    y = predict(x)
+    Loss.cross_entropy_error(y, t)
+    # Loss.cross_entropy_error(y, t)
+  end
+
+  def loss2(x, t)
     y = predict(x)
     last_layer.forward(y, t)
   end
@@ -60,6 +67,16 @@ class TwoLayerNet
     grads
   end
 
+  def update_layers(grad, learning_rate: 0.01)
+    %w[W1 b1 W2 b2].each do |key|
+      params[key] -= learning_rate * grad[key]
+    end
+    layers["Affine1"].w = params["W1"]
+    layers["Affine1"].b = params["b1"]
+    layers["Affine2"].w = params["W2"]
+    layers["Affine2"].b = params["b2"]
+  end
+
   private
 
     def initial_weights(input_size:, hidden_size:, output_size:, weight_init_std:)
@@ -73,7 +90,7 @@ class TwoLayerNet
     def initial_layers
       @layers = {}
       layers["Affine1"] = AffineLayer.new(w: params["W1"], b: params["b1"])
-      layers["Relu1"] = ReluLayer.new
+      layers["Activate1"] = SigmoidLayer.new # ReluLayer.new
       layers["Affine2"] = AffineLayer.new(w: params["W2"], b: params["b2"])
 
       @last_layer = SoftmaxWithLossLayer.new

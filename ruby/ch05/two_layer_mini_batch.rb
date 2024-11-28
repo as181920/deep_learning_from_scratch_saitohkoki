@@ -21,7 +21,7 @@ module TwoLayerMiniBatch
     # set train configs
     iters_num = 10000 # 10000
     train_size = x_train.shape[0]
-    batch_size = 100
+    batch_size = 10 # 100
     learning_rate = 0.1
     iter_per_epoch = [(train_size / batch_size), 1].max
 
@@ -34,13 +34,11 @@ module TwoLayerMiniBatch
       t_batch = t_train[batch_mask]
 
       # calculate gradient
-      # grad = network.numerical_gradient(x_batch, t_batch)
-      grad = network.gradient(x_batch, t_batch)
+      grad = network.numerical_gradient(x_batch, t_batch)
+      # grad = network.gradient(x_batch, t_batch)
 
       # update params
-      %w[W1 b1 W2 b2].each do |key|
-        network.params[key] -= learning_rate * grad[key]
-      end
+      network.update_layers(grad, learning_rate:)
 
       # save train loss data
       loss = network.loss(x_batch, t_batch)
@@ -50,13 +48,13 @@ module TwoLayerMiniBatch
       $stdout.flush
 
       # save acc data for each epoch
-      next unless (index % iter_per_epoch).zero?
+      # next unless (index % iter_per_epoch).zero?
 
       train_acc = network.accuracy(x_train, t_train)
       test_acc = network.accuracy(x_test, t_test)
       train_acc_list.append(train_acc)
       test_acc_list.append(test_acc)
-      print "\ntrain_acc: #{train_acc}, test_acc: #{test_acc}\n"
+      print "\nloss: #{loss}, train_acc: #{train_acc}, test_acc: #{test_acc}\n"
       $stdout.flush
     end
     print "done.\n"
