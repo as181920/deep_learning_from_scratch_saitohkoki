@@ -6,7 +6,8 @@ class SigmoidLayer
 
   # x: Torch.tensor
   def forward(x)
-    @out = 1 / (1 + Torch.exp(x))
+    # @out = 1 / (1 + Torch.exp(-x))
+    @out = Torch.sigmoid(x)
     out
   end
 
