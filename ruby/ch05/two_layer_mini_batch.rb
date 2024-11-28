@@ -19,9 +19,9 @@ module TwoLayerMiniBatch
     test_acc_list = []
 
     # set train configs
-    iters_num = 10000 # 10000
+    iters_num = 10000
     train_size = x_train.shape[0]
-    batch_size = 10 # 100
+    batch_size = 100
     learning_rate = 0.1
     iter_per_epoch = [(train_size / batch_size), 1].max
 
@@ -34,8 +34,8 @@ module TwoLayerMiniBatch
       t_batch = t_train[batch_mask]
 
       # calculate gradient
-      grad = network.numerical_gradient(x_batch, t_batch)
-      # grad = network.gradient(x_batch, t_batch)
+      # grad = network.numerical_gradient(x_batch, t_batch)
+      grad = network.gradient(x_batch, t_batch)
 
       # update params
       network.update_layers(grad, learning_rate:)
@@ -48,7 +48,7 @@ module TwoLayerMiniBatch
       $stdout.flush
 
       # save acc data for each epoch
-      # next unless (index % iter_per_epoch).zero?
+      next unless (index % iter_per_epoch).zero? || index.eql?(iters_num.pred)
 
       train_acc = network.accuracy(x_train, t_train)
       test_acc = network.accuracy(x_test, t_test)

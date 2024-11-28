@@ -18,16 +18,10 @@ class TwoLayerNet
 
   def predict(x)
     layers.each_value { |layer| x = layer.forward(x) }
-    Utility.softmax(x, dim: 0)
+    x
   end
 
   def loss(x, t)
-    y = predict(x)
-    Loss.cross_entropy_error(y, t)
-    # Loss.cross_entropy_error(y, t)
-  end
-
-  def loss2(x, t)
     y = predict(x)
     last_layer.forward(y, t)
   end
