@@ -2,7 +2,8 @@ require "torch-rb"
 require_relative "../common/global"
 
 class AffineLayer
-  attr_reader :w, :b, :x, :dw, :db
+  attr_accessor :w, :b
+  attr_reader :x, :dw, :db
 
   def initialize(w:, b:)
     @w = w
